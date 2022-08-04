@@ -4,8 +4,6 @@ Based on https://github.com/asanakoy/kaggle_carvana_segmentation
 
 import torch
 import torch.utils.data as data
-from torch.autograd import Variable as V
-
 import cv2
 import numpy as np
 import os
@@ -20,8 +18,8 @@ def randomHueSaturationValue(
     if np.random.random() < u:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         h, s, v = cv2.split(image)
-        hue_shift = np.random.randint(hue_shift_limit[0], hue_shift_limit[1]+1, dtype="uint8")
-        h += hue_shift
+        hue_shift = np.random.randint(hue_shift_limit[0], hue_shift_limit[1]+1, dtype=np.int)
+        h = cv2.add(h, hue_shift)
         sat_shift = np.random.uniform(sat_shift_limit[0], sat_shift_limit[1])
         s = cv2.add(s, sat_shift)
         val_shift = np.random.uniform(val_shift_limit[0], val_shift_limit[1])
@@ -52,8 +50,8 @@ def randomShiftScaleRotate(
         dx = round(np.random.uniform(shift_limit[0], shift_limit[1]) * width)
         dy = round(np.random.uniform(shift_limit[0], shift_limit[1]) * height)
 
-        cc = np.umath.cos(angle / 180 * np.umath.pi) * sx
-        ss = np.umath.sin(angle / 180 * np.umath.pi) * sy
+        cc = np.math.cos(angle / 180 * np.math.pi) * sx
+        ss = np.math.sin(angle / 180 * np.math.pi) * sy
         rotate_matrix = np.array([[cc, -ss], [ss, cc]])
 
         box0 = np.array([[0, 0], [width, 0], [width, height], [0, height], ])
@@ -108,7 +106,7 @@ def randomRotate90(
 
 def default_loader(id, root) -> (np.ndarray, np.ndarray):
     img = cv2.imread(os.path.join(root, f'{id}_sat.jpg'))
-    mask = cv2.imread(os.path.join(root, f'{id}_mask.jpg'), cv2.IMREAD_GRAYSCALE)
+    mask = cv2.imread(os.path.join(root, f'{id}_mask.png'), cv2.IMREAD_GRAYSCALE)
 
     img = randomHueSaturationValue(image=img,
                                    hue_shift_limit=(-30, 30),
@@ -138,18 +136,23 @@ def default_loader(id, root) -> (np.ndarray, np.ndarray):
 class ImageFolder(data.Dataset):
 
     def __init__(self, trainlist, root):
-        print("Hi There")
-        print(root)
+        """
+        :param trainlist: list of image files
+        :param root (string): directory with images
+        """
         self.ids = trainlist
         self.loader = default_loader
         self.root = root
 
+    def __len__(self):
+        return len(self.ids)
+
     def __getitem__(self, index):
+        if torch.is_tensor(index):
+            index = index.tolist()
+
         id = self.ids[index]
         img, mask = self.loader(id, self.root)
         img = torch.Tensor(img)
         mask = torch.Tensor(mask)
         return img, mask
-
-    def __len__(self):
-        return len(list(self.ids))
