@@ -2,3 +2,6 @@
 dataset/test
 dataset/train
 dataset/valid
+
+# PyCharm IDE
+.idea/*
