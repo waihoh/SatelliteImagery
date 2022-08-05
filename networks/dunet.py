@@ -10,7 +10,7 @@ nonlinearity = partial(F.relu, inplace=True)
 class Dblock(nn.Module):
     def __init__(self, channel):
         super().__init__()
-        self.dilate1 = nn.Conv2d(in_channels=int(channel/2), out_channels=channel, kernel_size=3, dilation=1, padding=1)
+        self.dilate1 = nn.Conv2d(in_channels=channel//2, out_channels=channel, kernel_size=3, dilation=1, padding=1)
         self.dilate2 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=3, dilation=2, padding=2)
         self.dilate3 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=3, dilation=4, padding=4)
         self.dilate4 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=3, dilation=8, padding=8)
