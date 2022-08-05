@@ -4,7 +4,7 @@ import torch
 
 class Unet(nn.Module):
     def __init__(self):
-        super(Unet, self).__init__()
+        super().__init__()
 
         self.down1 = self.conv_stage(dim_in=3, dim_out=8)
         self.down2 = self.conv_stage(dim_in=8, dim_out=16)
@@ -49,23 +49,23 @@ class Unet(nn.Module):
             return nn.Sequential(
                 nn.Conv2d(in_channels=dim_in, out_channels=dim_out, kernel_size=kernel_size, stride=stride, padding=padding, bias=bias),
                 nn.BatchNorm2d(num_features=dim_out),
-                nn.ReLU(),
+                nn.ReLU(inplace=True),
                 nn.Conv2d(in_channels=dim_out, out_channels=dim_out, kernel_size=kernel_size, stride=stride, padding=padding, bias=bias),
                 nn.BatchNorm2d(num_features=dim_out),
-                nn.ReLU(),
+                nn.ReLU(inplace=True),
             )
         else:
             return nn.Sequential(
                 nn.Conv2d(in_channels=dim_in, out_channels=dim_out, kernel_size=kernel_size, stride=stride, padding=padding, bias=bias),
-                nn.ReLU(),
+                nn.ReLU(inplace=True),
                 nn.Conv2d(in_channels=dim_out, out_channels=dim_out, kernel_size=kernel_size, stride=stride, padding=padding, bias=bias),
-                nn.ReLU(),
+                nn.ReLU(inplace=True),
             )
 
     def upsample(self, ch_coarse, ch_fine):
         return nn.Sequential(
             nn.ConvTranspose2d(in_channels=ch_coarse, out_channels=ch_fine, kernel_size=4, stride=2, padding=1, bias=False),
-            nn.ReLU()
+            nn.ReLU(inplace=True)
         )
 
     def forward(self, x):
@@ -90,3 +90,8 @@ class Unet(nn.Module):
         out = self.conv_last(out)
 
         return out
+
+
+if __name__ == "__main__":
+    mdl = Unet()
+    print(mdl)
