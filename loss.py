@@ -4,7 +4,7 @@ import torch.nn as nn
 
 class dice_bce_loss(nn.Module):
     def __init__(self, batch=True):
-        super(dice_bce_loss, self).__init__()
+        super().__init__()
         self.batch = batch
         self.bce_loss = nn.BCELoss()
 
@@ -29,4 +29,3 @@ class dice_bce_loss(nn.Module):
         a = self.bce_loss(y_pred, y_true)
         b = self.soft_dice_loss(y_true, y_pred)
         return a + b
-    
