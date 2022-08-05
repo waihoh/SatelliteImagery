@@ -95,3 +95,10 @@ class Unet(nn.Module):
 if __name__ == "__main__":
     mdl = Unet()
     print(mdl)
+
+    input = torch.rand(2, 3, 1024, 1024)
+    output = mdl.forward(input)
+    print(output)
+    print(output.shape)
+
+
