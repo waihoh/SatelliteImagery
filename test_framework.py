@@ -6,6 +6,7 @@ from loss import dice_bce_loss
 from framework import MyFrame
 from time import time
 from networks.unet import Unet
+from networks.dunet import Dunet
 
 # configurations
 SHAPE = (1024, 1024)
@@ -19,7 +20,7 @@ batchsize = 4
 dataset = ImageFolder(trainlist, FOLDER_PATH)
 data_loader = DataLoader(dataset=dataset, batch_size=batchsize, shuffle=True)
 
-solver = MyFrame(net=Unet, loss=dice_bce_loss, device=device, lr=2e-4)
+solver = MyFrame(net=Dunet, loss=dice_bce_loss, device=device, lr=2e-4)  # net = Unet, Dunet,
 
 total_epoch = 1
 tic = time()
