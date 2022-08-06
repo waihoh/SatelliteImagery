@@ -1,9 +1,10 @@
 import numpy as np
 import torch
 import cv2
+from collections import OrderedDict
 
 
-class MyFrame():
+class MyFrame:
     def __init__(self, net, loss, device, lr=2e-4, evalmode=False):
         self.device = device
         self.net = net().to(self.device)
@@ -64,7 +65,14 @@ class MyFrame():
         torch.save(self.net.state_dict(), path)
 
     def load(self, path):
-        self.net.load_state_dict(torch.load(path))
+        # Note that the provided trained model was saved with DataParallel.
+        # Remove "module." before loading to self.net
+        temp = torch.load(path, map_location=self.device)
+        new_state_dict = OrderedDict()
+        for k, v in temp.items():
+            new_state_dict[k.replace('module.', '')] = v
+
+        self.net.load_state_dict(new_state_dict)
 
     def update_lr(self, new_lr, mylog, factor=False):
         if factor:
