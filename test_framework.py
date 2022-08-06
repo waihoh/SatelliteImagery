@@ -7,6 +7,7 @@ from framework import MyFrame
 from time import time
 from networks.unet import Unet
 from networks.dunet import Dunet
+from networks.dlinknet import DLinkNet34, DLinkNet34_less_pool, DLinkNet50, DLinkNet101, LinkNet34
 
 # configurations
 SHAPE = (1024, 1024)
@@ -20,7 +21,8 @@ batchsize = 4
 dataset = ImageFolder(trainlist, FOLDER_PATH)
 data_loader = DataLoader(dataset=dataset, batch_size=batchsize, shuffle=True)
 
-solver = MyFrame(net=Dunet, loss=dice_bce_loss, device=device, lr=2e-4)  # net = Unet, Dunet,
+# net = Unet, Dunet, DLinkNet34, DLinkNet34_less_pool, DLinkNet50, DLinkNet101, LinkNet34
+solver = MyFrame(net=DLinkNet34, loss=dice_bce_loss, device=device, lr=2e-4)
 
 total_epoch = 1
 tic = time()
