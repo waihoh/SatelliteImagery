@@ -3,5 +3,11 @@ dataset/test
 dataset/train
 dataset/valid
 
+# outputs
+outputs/*
+
+# weights
+weights/*
+
 # PyCharm IDE
 .idea/*
