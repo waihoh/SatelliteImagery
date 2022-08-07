@@ -1,4 +1,4 @@
-# SatelliteImagery
+# Satellite Imagery - Road Extraction
 I am learning how to perform road extraction from satellite images.
 
 The original code is from https://github.com/zlckanata/DeepGlobe-Road-Extraction-Challenge. In this repository, it is now updated to run on Python 3 and a newer PyTorch version.
